@@ -4,6 +4,7 @@ import useSWR from "swr";
 import BASE_URL from "../../src/Constant/BASE_URL";
 import Fetcher from "../../src/utils/Fetcher";
 import axios from "axios";
+import Link from "next/link";
 
 function UserDetails() {
   const route = useRouter();
@@ -26,6 +27,7 @@ function UserDetails() {
       fetchRepo(data.repos_url);
     }
   }, [data]);
+  console.log(repo)
 
   if (error) return <p>Error</p>;
   if (!data) return <p>Loading</p>;
@@ -35,18 +37,18 @@ function UserDetails() {
       <div className="grid w-1/2 h-auto py-4 card bg-base-300 rounded-box place-items-center">
         <div className="avatar">
           <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-            <img src={data.avatar_url} />
+            <img src={data?.avatar_url} />
           </div>
         </div>
       </div>
-      <div className="divider">{data.login.toUpperCase()}</div>
+      <div className="divider">{data?.login.toUpperCase()}</div>
       <input
         onChange={(e) => setSearch(e.target.value)}
         type="text"
         placeholder="Search Repo"
         className="input input-bordered w-full max-w-xs mb-4"
       />
-      <div className="grid grid-cols-2 gap-2 h-auto w-4/5 py-10 card bg-base-300 rounded-box place-items-center">
+      <div className="  grid w-full grid-rows-1 md:grid-cols-2 gap-4  h-auto md:w-4/5 py-10 card bg-base-300 rounded-box place-items-center">
         {repo &&
           repo
             .filter((x) => {
@@ -59,6 +61,7 @@ function UserDetails() {
                   fork={data.forks_count}
                   name={data.name}
                   description={data.description}
+                  click={data.html_url}
                 />
               </div> 
             )) }
@@ -69,16 +72,16 @@ function UserDetails() {
 
 export default UserDetails;
 
-function CardRepo({ name, description, fork }) {
+function CardRepo({ name, description, fork,click }) {
   return (
-    <div className="card w-96 h-52 bg-primary text-primary-content">
+    <div className="card w-80 md:w-96 h-52 bg-primary text-primary-content">
       <div className="card-body">
         <h2 className="card-title">{name}</h2>
         <p>{description}</p>
         <div className="card-actions justify-end  flex gap-3 items-center ">
           <p>Fork {fork}</p>
           <p>Fork</p>
-          <button className="btn">See Details</button>
+          <button className="btn"><Link target={"_blank"}  href={`${click}`}>See Details</Link></button>
         </div>
       </div>
     </div>

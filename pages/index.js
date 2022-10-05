@@ -13,23 +13,37 @@ import { useRouter } from 'next/router'
 
 export default function Home() {
   const router = useRouter()
-  const {data,error} = useSWR(BASE_URL,Fetcher)
+  const { data, error } = useSWR(BASE_URL, Fetcher)
   const dispatch = useDispatch()
   const user = useSelector(state => state.user)
-  const [dataUser,setDataUser ] = useState([])
+  const [dataUser, setDataUser] = useState([])
+  const [search, setSearch] = useState("")
+  const [suggest,setSugget] = useState([])
 
+  function Search() {
+    const reg = new RegExp(search)
+    const res = user.filter((x) => reg.exec(x.login))
+    if(res.length<10){
+      setSugget(res)
+    }
+  }
+  console.log(suggest)
 
   useEffect(() => {
-    if(data){
+    Search()
+  },[search])
+
+  useEffect(() => {
+    if (data) {
       dispatch(addUser(data))
-      setDataUser(data.slice(0,3))
+      setDataUser(data.slice(0, 3))
     }
-  },[data])
+  }, [data])
 
 
 
-  if(error) return <p>Error</p>
-  if(!data) return <p>Loading</p>
+  if (error) return <p>Error</p>
+  if (!data) return <p>Loading</p>
   return (
     <div className=' bg-white '>
       <Head>
@@ -39,16 +53,23 @@ export default function Home() {
       </Head>
 
 
-      <main className=' bg-gray-100 w-full  min-h-screen flex flex-col items-center justify-center'>
+      <main className=' shadow-2xl bg-gray-100 w-full min-h-screen flex flex-col items-center justify-center'>
         {/* ==== Fisrt Component === */}
 
-          
-        <div className=' w-1/2 rounded-bl-[200px] shadow-lg  bg-rose-700 z-10  flex flex-col items-center justify-start'>
-          <div className=' w-full mx-10 bg-white py-4 rounded-bl-[200px] pb-10  text-gray-700 flex flex-col gap-4 px-10'>
-           <div className=' w-full flex items-center justify-between'>
-            <h2 className=' text-gray-700 font-bold text-4xl'>Repository</h2>
-              <input placeholder='search ...' className=' bg-transparent border rounded-lg px-2 text-center'/>
-           </div>
+
+        <div className='shadow-2xl w-full md:w-1/2 rounded-bl-[200px]  bg-rose-700 z-10  flex flex-col items-center justify-start'>
+          <div className='w-full mx-10 bg-white shadow-lg py-4 rounded-bl-[200px] pb-10  text-gray-700 flex flex-col gap-4 px-10'>
+            <div className='w-full flex items-center justify-between'>
+              <h2 className=' text-gray-700 font-bold text-2xl md:text-4xl'>Repository</h2>
+              <div className='relative'>
+              <input onChange={(e) => setSearch(e.target.value)} placeholder='search ...' className=' bg-transparent border rounded-lg px-2 text-center w-32 md:w-52 ' />
+                <div className={`${suggest.length>0 && search.length>0 ? 'visible' : ' invisible '} rounded-b-lg w-full max-h-[100px] mt-1 py-4 bg-rose-800 text-white gap-1 absolute flex flex-col items-center justify-center overflow-y-auto`}>
+                  {search.length>0 && suggest.map((item) => (
+                    <p key={item.login} onClick={() => router.push(`/user/${item.login}`)} className='cursor-pointer px-2 hover:text-rose-800 hover:bg-white'>{item.login}</p>
+                  ))}
+                </div>
+              </div>
+            </div>
             <CardTop />
           </div>
 
@@ -57,15 +78,15 @@ export default function Home() {
 
 
           <div onScroll={(e) => console.log(e)} className=' overflow-hidden overflow-x-auto flex items-center justify-start w-full px-20 py-10 gap-5 rounded-bl-[170px] bg-rose-700' >
-            {dataUser.map((item,i) => (
+            {dataUser.map((item, i) => (
               <div onClick={() => router.push(`/user/${item.login}`)} key={i}>
-              <CardComponent name={item.login} avatar={item.avatar_url} />
+                <CardComponent name={item.login} avatar={item.avatar_url} />
               </div>
             ))}
-            
+
           </div>
 
-         
+
         </div>
 
 
@@ -78,22 +99,22 @@ export default function Home() {
 
 function CardTop({ }) {
   return (
-  <div className=' flex flex-col items-center gap-4'>
-    <div className=' flex items-center gap-4'>
-      <div className=' rounded-full w-32 h-32 bg-red-400 overflow-hidden flex items-start justify-center '>
-        <img className=' w-full ' src={'https://i.pinimg.com/564x/28/ac/9b/28ac9bf9ab8c69154eaa9aed61c44953.jpg'} />
+    <div className=' flex flex-col items-center gap-4'>
+      <div className=' flex items-center gap-4'>
+        <div className=' rounded-full w-32 h-32 bg-red-400 overflow-hidden flex items-start justify-center '>
+          <img className=' w-full ' src={'https://i.pinimg.com/564x/28/ac/9b/28ac9bf9ab8c69154eaa9aed61c44953.jpg'} />
+        </div>
+        <div className=' flex flex-col'>
+          <p className=' text-lg font-semibold'>Name</p>
+          <p className=' text-xs '>Captions</p>
+        </div>
       </div>
-      <div className=' flex flex-col'>
-        <p className=' text-lg font-semibold'>Name</p>
-        <p className=' text-xs '>Captions</p>
+      <div className=' max-w-sm '>
+        <p className=' text-sm '>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
       </div>
-    </div>
-    <div className=' max-w-sm '>
-    <p className=' text-sm '>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
-    </div>
-    <div className=' flex gap-4 text-lg font-semibold'>
-      <p className=' text-lg text-center '>1200<br/> Repo</p>
-      <p className=' text-lg text-center'>1200<br/> Repo</p>
-    </div>
-  </div>);
+      <div className=' flex gap-4 text-lg font-semibold'>
+        <p className=' text-lg text-center '>1200<br /> Repo</p>
+        <p className=' text-lg text-center'>1200<br /> Repo</p>
+      </div>
+    </div>);
 }
