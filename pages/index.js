@@ -27,7 +27,12 @@ export default function Home() {
       setSugget(res)
     }
   }
-  console.log(suggest)
+
+  function refresh(){
+    const x = window.scrollX
+    console.log(x)
+  }
+
 
   useEffect(() => {
     Search()
@@ -74,10 +79,10 @@ export default function Home() {
           </div>
 
 
+{/* offsetWidth */}
 
 
-
-          <div onScroll={(e) => console.log(e)} className=' overflow-hidden overflow-x-auto flex items-center justify-start w-full px-20 py-10 gap-5 rounded-bl-[170px] bg-rose-700' >
+          <div onScroll={refresh} className=' overflow-hidden overflow-x-auto flex items-center justify-start w-full px-20 py-10 gap-5 rounded-bl-[170px] bg-rose-700' >
             {dataUser.map((item, i) => (
               <div onClick={() => router.push(`/user/${item.login}`)} key={i}>
                 <CardComponent name={item.login} avatar={item.avatar_url} />

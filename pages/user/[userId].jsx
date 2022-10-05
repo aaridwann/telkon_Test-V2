@@ -27,10 +27,20 @@ function UserDetails() {
       fetchRepo(data.repos_url);
     }
   }, [data]);
-  console.log(repo)
+  console.log(repo);
 
-  if (error) return <p>Error</p>;
-  if (!data) return <p>Loading</p>;
+  if (error)
+    return (
+      <div className=" w-full min-h-screen flex items-center justify-center">
+        <p>Something error please try again later</p>
+      </div>
+    );
+  if (!data)
+    return (
+      <div className=" w-full min-h-screen flex items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    );
 
   return (
     <div className=" p-2 w-full mx-auto items-center justify-center flex flex-col border-opacity-50">
@@ -63,8 +73,8 @@ function UserDetails() {
                   description={data.description}
                   click={data.html_url}
                 />
-              </div> 
-            )) }
+              </div>
+            ))}
       </div>
     </div>
   );
@@ -72,7 +82,7 @@ function UserDetails() {
 
 export default UserDetails;
 
-function CardRepo({ name, description, fork,click }) {
+function CardRepo({ name, description, fork, click }) {
   return (
     <div className="card w-80 md:w-96 h-52 bg-primary text-primary-content">
       <div className="card-body">
@@ -81,7 +91,11 @@ function CardRepo({ name, description, fork,click }) {
         <div className="card-actions justify-end  flex gap-3 items-center ">
           <p>Fork {fork}</p>
           <p>Fork</p>
-          <button className="btn"><Link target={"_blank"}  href={`${click}`}>See Details</Link></button>
+          <button className="btn">
+            <Link target={"_blank"} href={`${click}`}>
+              See Details
+            </Link>
+          </button>
         </div>
       </div>
     </div>
