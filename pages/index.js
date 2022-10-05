@@ -28,6 +28,15 @@ export default function Home() {
     }
   }
 
+  function loadMore(){
+    return setDataUser((x) => [...x, ...data.slice(dataUser.length,dataUser.length+2)])
+    //  [...dataUser, ...data.slice(dataUser.length,dataUser.length+1)]
+    // const res = data.slice(dataUser.length,dataUser.length+1)
+
+  }
+  console.log(dataUser)
+
+
   function refresh(){
     const x = window.scrollX
     console.log(x)
@@ -41,7 +50,7 @@ export default function Home() {
   useEffect(() => {
     if (data) {
       dispatch(addUser(data))
-      setDataUser(data.slice(0, 3))
+      setDataUser(data.slice(0, 5))
     }
   }, [data])
 
@@ -88,7 +97,7 @@ export default function Home() {
                 <CardComponent name={item.login} avatar={item.avatar_url} />
               </div>
             ))}
-
+            <button onClick={loadMore} className=' bg-white p-4 text-rose-800 font-bold rounded-xl'><p>Load more</p></button>
           </div>
 
 
