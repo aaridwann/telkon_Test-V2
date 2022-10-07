@@ -5,6 +5,7 @@ import BASE_URL from "../../src/Constant/BASE_URL";
 import Fetcher from "../../src/utils/Fetcher";
 import axios from "axios";
 import Link from "next/link";
+import Image from "next/image";
 
 function UserDetails() {
   const route = useRouter();
@@ -46,8 +47,14 @@ function UserDetails() {
     <div className=" p-2 w-full mx-auto items-center justify-center flex flex-col border-opacity-50">
       <div className="grid w-1/2 h-auto py-4 card bg-base-300 rounded-box place-items-center">
         <div className="avatar">
-          <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-            <img src={data?.avatar_url} />
+          <div className="w-24 rounded-full overflow-hidden ring ring-primary ring-offset-base-100 ring-offset-2">
+            <Image
+              className=" h-full flex items-center justify-center "
+              layout='fixed'
+              width={100}
+              height={100}
+              src={data?.avatar_url}
+            />
           </div>
         </div>
       </div>

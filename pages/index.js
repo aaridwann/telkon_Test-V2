@@ -30,11 +30,7 @@ export default function Home() {
 
   function loadMore(){
     return setDataUser((x) => [...x, ...data.slice(dataUser.length,dataUser.length+2)])
-    //  [...dataUser, ...data.slice(dataUser.length,dataUser.length+1)]
-    // const res = data.slice(dataUser.length,dataUser.length+1)
-
   }
-  console.log(dataUser)
 
 
   function refresh(){
@@ -57,7 +53,11 @@ export default function Home() {
 
 
   if (error) return <p>Error</p>
-  if (!data) return <p>Loading</p>
+  if (!data) return (
+    <div className=" w-full min-h-screen flex items-center justify-center">
+      <p>Loading...</p>
+    </div>
+  );
   return (
     <div className=' bg-white '>
       <Head>
